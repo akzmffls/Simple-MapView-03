@@ -12,6 +12,25 @@ import MapKit
 class ViewController: UIViewController {
 
     @IBOutlet weak var myMapView: MKMapView!
+    var foodStoreTel = ["051-863-6997",
+                        "051-852-9969",
+                        "051-852-9969",
+                        "051-852-9969",
+                        "051-852-9969",
+                        "051-853-0410"]
+    
+    var foodStoreNames = ["늘해랑", "번개반점", "아딸", "왕짜장", "토마토 도시락", "홍콩반점"]
+    
+    var foodStoreAddress = ["부산광역시 부산진구 양정1동 350-1",
+                            "부산광역시 부산진구 양정동 418-282",
+                            "부산광역시 부산진구 양정동 393-18",
+                            "부산광역시 부산진구 양정1동 356-22",
+                            "부산광역시 부산진구 양정1동 350-1",
+                            "부산광역시 부산진구 양정동 353-38"]
+    var count = 0
+    
+    var annotations = [MKPointAnnotation]()
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view, typically from a nib.
@@ -48,40 +67,68 @@ class ViewController: UIViewController {
         pin02.title = "DIT 동의과학대학교"
         pin02.subtitle = "부산광역시 부산진구 양정동 429-19"
         myMapView.addAnnotation(pin02)
+
         
         // gecoding : 주소 -> 위도, 경도
-        let addr = "부산광역시 부산진구 양정1동 350-1"
-        let gecoder = CLGeocoder()
-        gecoder.geocodeAddressString(addr) {
-            (placemarks: [CLPlacemark]?, error: Error?) -> Void in
-            if let error = error {
-                print(error)
-                return
-            } else {
-                print("nil 발생")
-            }
-            
-            if let placemarks = placemarks {
-                let placemark = placemarks[0]
-//                print(placemark.location)
-//                print(placemark.name)
-//                print(placemark.postalCode)
-//                print(placemark.country)
-                let loc02 = placemark.location?.coordinate
-                let pin03 = MKPointAnnotation()
-                pin03.coordinate = loc02!
-                pin03.title = "토마토 도시락"
-                pin03.subtitle = addr
-                self.myMapView.addAnnotation(pin03)
+//        let addr = "부산광역시 부산진구 양정1동 350-1"
+//        let gecoder = CLGeocoder()
+//        gecoder.geocodeAddressString(addr) {
+//            (placemarks: [CLPlacemark]?, error: Error?) -> Void in
+//            if let error = error {
+//                print(error)
+//                return
+//            } else {
+//                print("nil 발생")
+//            }
+//
+//            if let placemarks = placemarks {
+//                let placemark = placemarks[0]
+////                print(placemark.location)
+////                print(placemark.name)
+////                print(placemark.postalCode)
+////                print(placemark.country)
+//                let loc02 = placemark.location?.coordinate
+//                let pin03 = MKPointAnnotation()
+//                pin03.coordinate = loc02!
+//                pin03.title = "토마토 도시락"
+//                pin03.subtitle = addr
+//                self.myMapView.addAnnotation(pin03)
+//            }
+//        }
+//    }
+
+//    override func didReceiveMemoryWarning() {
+//        super.didReceiveMemoryWarning()
+//        // Dispose of any resources that can be recreated.
+//    }
+//
+//
+//}
+        for addr in foodStoreAddress {
+            let geocoder = CLGeocoder()
+            geocoder.geocodeAddressString(addr) {
+                (placemarks: [CLPlacemark]?, error: Error?) -> Void in
+                    if let myError = error {
+                        print(myError)
+                        return
+                    } else {
+                        print("nil 발생")
+                    }
+                    
+                    let myPlacemark = placemarks![0]
+                    let loc = myPlacemark.location?.coordinate
+                    let annotation = MKPointAnnotation()
+                    annotation.coordinate = loc!
+                    annotation.title = self.foodStoreNames[self.count]
+                    annotation.subtitle = self.foodStoreTel[self.count]
+                    self.count = self.count + 1
+                self.myMapView.addAnnotation(annotation)
+                
+                self.annotations.append(annotation)
+                
             }
         }
     }
-
-    override func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
-    }
-
-
 }
+
 
